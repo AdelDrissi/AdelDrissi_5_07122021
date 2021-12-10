@@ -1,5 +1,3 @@
-let kanapAll = [];
-
 const fetchKanap = async () => {
   await fetch('http://localhost:3000/api/products')
     .then((res) => res.json())
@@ -14,11 +12,11 @@ fetchKanap();
 function displayProducts(products) {
   let CanapeHtml = '';
   products.forEach((product) => {
-    CanapeHtml += `<a href="./product.html?_id=${product._id}">
+    CanapeHtml += `<a href="./product.html?id=${product._id}">
                             <article>
                                 <img src="${product.imageUrl}" alt="${product.altTxt}">
                                 <h3 class="productName"> ${product.name} </h3>
-                                <p class="productDescription"> ${product.description} </p>
+                                <p class="Description"> ${product.description} </p>
                             </article>
                         </a>`;
   });
