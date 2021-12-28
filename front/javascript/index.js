@@ -2,7 +2,7 @@ const fetchKanap = async () => {
   await fetch('http://localhost:3000/api/products')
     .then((res) => res.json())
     .then((products) => {
-      console.log(products);
+      console.table(products);
       displayProducts(products);
     });
 };
