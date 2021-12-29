@@ -101,7 +101,7 @@ getCart();
 
 /* Modification d'une quantité de produit*/
 
-function getTotal() {
+function modifyQtt() {
   let qttModif = document.querySelectorAll('.itemQuantity');
 
   for (let k = 0; k < qttModif.length; k++) {
@@ -126,7 +126,30 @@ function getTotal() {
     });
   }
 }
-getTotal();
+modifyQtt();
+
+function getTotals() {
+  /*Récupération du total des quantités*/
+  let elemsQtt = document.getElementsByClassName('itemQuantity');
+  let myLength = elemsQtt.length,
+    totalQtt = 0;
+
+  for (let i = 0; i < myLength; ++i) {
+    totalQtt += elemsQtt[i].valueAsNumber;
+  }
+  let productTotalQuantity = document.getElementById('totalQuantity');
+  productTotalQuantity.innerHTML = totalQtt;
+
+  /* Récupération du prix total*/
+  totalPrice = 0;
+  for (let i = 0; i < myLength; ++i) {
+    totalPrice += elemsQtt[i].valueAsNumber * produitLocalStorage[i].priceKanap;
+  }
+
+  let productTotalPrice = document.getElementById('totalPrice');
+  productTotalPrice.innerHTML = totalPrice;
+}
+getTotals();
 
 /*Suppression d'un Produit*/
 function deleteProduct() {
@@ -161,23 +184,20 @@ let prixTotal = [];
 for (let m = 0; m < produitLocalStorage.length; m++) {
   let prixProduitPanier = produitLocalStorage[m].prixProduit;
 
-  /* Mettre les prix du panier dans la variable "prixTotal"*/
-  prixTotal.push(prixProduitPanier);
-  console.log(prixTotal);
+  /* Additioner les prix qu'il y'a dans le tableau de la variable "prixTotal"*/
+  const reducer = (accumulator, currentValue) => accumulator + currentValue;
+  const prixProduit = prixTotal.reduce(reducer, 0);
+  console.log(prixProduit);
+
+  let idProducts = [];
+  for (let i = 0; i < produitLocalStorage.length; i++) {
+    idProducts.push(produitLocalStorage[i].idProduit);
+  }
 }
 
-/* Additioner les prix qu'il y'a dans le tableau de la variable "prixTotal"*/
-const reducer = (accumulator, currentValue) => accumulator + currentValue;
-const prixTotalCalcul = prixTotal.reduce(reducer, 0);
-
-let idProducts = [];
-for (let i = 0; i < produitLocalStorage.length; i++) {
-  idProducts.push(produitLocalStorage[i].idProduit);
-}
-
-//Instauration formulaire avec regex
+/*Instauration formulaire avec regex*/
 function getForm() {
-  // Ajout des Regex
+  /* Ajout des Regex*/
   let form = document.querySelector('.cart__order__form');
 
   let emailRegExp = new RegExp(
@@ -187,100 +207,4 @@ function getForm() {
   let addressRegExp = new RegExp(
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
   );
-
-  // Ecoute de la modification du prénom
-  form.firstName.addEventListener('change', function () {
-    validFirstName(this);
-  });
-
-  // Ecoute de la modification du prénom
-  form.lastName.addEventListener('change', function () {
-    validLastName(this);
-  });
-
-  // Ecoute de la modification du prénom
-  form.address.addEventListener('change', function () {
-    validAddress(this);
-  });
-
-  // Ecoute de la modification du prénom
-  form.city.addEventListener('change', function () {
-    validCity(this);
-  });
-
-  // Ecoute de la modification du prénom
-  form.email.addEventListener('change', function () {
-    validEmail(this);
-  });
-
-  //validation du prénom
-  const validFirstName = function (inputFirstName) {
-    let firstNameErrorMsg = inputFirstName.nextElementSibling;
-
-    if (charRegExp.test(inputFirstName.value)) {
-      firstNameErrorMsg.innerHTML = '';
-    } else {
-      firstNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-    }
-  };
-
-  //validation du nom
-  const validLastName = function (inputLastName) {
-    let lastNameErrorMsg = inputLastName.nextElementSibling;
-
-    if (charRegExp.test(inputLastName.value)) {
-      lastNameErrorMsg.innerHTML = '';
-    } else {
-      lastNameErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-    }
-  };
-
-  //validation de l'adresse
-  const validAddress = function (inputAddress) {
-    let addressErrorMsg = inputAddress.nextElementSibling;
-
-    if (addressRegExp.test(inputAddress.value)) {
-      addressErrorMsg.innerHTML = '';
-    } else {
-      addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-    }
-  };
-
-  //validation de la ville
-  const validCity = function (inputCity) {
-    let cityErrorMsg = inputCity.nextElementSibling;
-
-    if (charRegExp.test(inputCity.value)) {
-      cityErrorMsg.innerHTML = '';
-    } else {
-      cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ.';
-    }
-  };
-
-  //validation de l'email
-  const validEmail = function (inputEmail) {
-    let emailErrorMsg = inputEmail.nextElementSibling;
-
-    if (emailRegExp.test(inputEmail.value)) {
-      emailErrorMsg.innerHTML = '';
-    } else {
-      emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
-    }
-  };
-
-  getForm();
 }
-
-class formulaire {
-  constructor(input) {
-    this.prenom = document.querySelector('#prenom').value;
-    this.nom = document.querySelector('#nom').value;
-    this.ville = document.querySelector('#ville').value;
-    this.adresse = document.querySelector('#adresse').value;
-    this.email = document.querySelector('#email').value;
-  }
-}
-
-// const formulaireValues = new formulaire('ville');
-
-// console.log('formulaireValues');
