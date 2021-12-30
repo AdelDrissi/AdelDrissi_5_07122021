@@ -125,8 +125,57 @@ function modifyQtt() {
       location.reload();
     });
   }
+  
 }
 modifyQtt();
+
+function prixCanapQuantité() {
+  let qttModif = document.querySelectorAll('.itemQuantity');
+  let productPrice = document.querySelectorAll(
+    '.cart__item__content__titlePrice > p '
+  );
+
+  const priceCalculation = [];
+  for (let index = 0; index < produitLocalStorage.length; index++) {
+    const cartAmout =
+      produitLocalStorage[index].prixProduit *
+      produitLocalStorage[index].quantiteProduit;
+    for (let k = 0; k < qttModif.length; k++) {
+      qttModif[k].addEventListener('change', (event) => {
+        const numberProduct =
+          produitLocalStorage[index].prixProduit * qttModif[k].value;
+        productPrice[k].innerHTML = numberProduct + ' € ';
+        /*Selection de l'element à modifier en fonction de son id et sa couleur*/
+        let quantityModif = produitLocalStorage[k].quantiteProduit;
+        let qttModifValue = qttModif[k].valueAsNumber;
+
+        const resultFind = produitLocalStorage.find(
+          (element) => element.qttModifValue !== quantityModif
+        );
+
+        resultFind.quantiteProduit = qttModifValue;
+        produitLocalStorage[k].quantiteProduit = resultFind.quantiteProduit;
+
+        localStorage.setItem('produit', JSON.stringify(produitLocalStorage));
+
+        /* refresh rapide*/
+        location.reload();
+      });
+    }
+
+    priceCalculation.push(cartAmout);
+    const reduce = (previousValue, currentValue) =>
+      previousValue + currentValue;
+    total = priceCalculation.reduce(reduce);
+  }
+  // const total = tab.reduce(
+  //   (total, current) => total + current.prixProduit * current.quantiteProduit,
+  //   0
+  // );
+  const totalPrice = document.getElementById('totalPrice');
+  totalPrice.textContent = total;
+}
+prixCanapQuantité();
 
 function getTotals() {
   /*Récupération du total des quantités*/
@@ -143,12 +192,15 @@ function getTotals() {
   /* Récupération du prix total*/
   totalPrice = 0;
   for (let i = 0; i < myLength; ++i) {
-    totalPrice += elemsQtt[i].valueAsNumber * produitLocalStorage[i].priceKanap;
+    totalPrice +=
+      elemsQtt[i].valueAsNumber * produitLocalStorage[i].prixProduit;
   }
 
   let productTotalPrice = document.getElementById('totalPrice');
   productTotalPrice.innerHTML = totalPrice;
 }
+
+
 getTotals();
 
 /*Suppression d'un Produit*/
@@ -208,3 +260,7 @@ function getForm() {
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
   );
 }
+
+
+
+

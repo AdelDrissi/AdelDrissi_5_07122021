@@ -64,15 +64,12 @@ function getPost(article) {
 
 function addToCart(article) {
   const btn_envoyerPanier = document.querySelector('#addToCart');
+  let select = document.querySelector('select');
 
   /* QUANTITE ENTRE 1 ET 100 ET COULEUR */
 
   btn_envoyerPanier.addEventListener('click', (event) => {
-    if (
-      quantityPicked.value > 0 &&
-      quantityPicked.value <= 100 &&
-      quantityPicked.value != 0
-    ) {
+    if (quantityPicked.value > 0 && select.value) {
       /*RECUPERATION DU CHOIX DE LA COULEUR*/
 
       let couleurChoix = colorPicked.value;
@@ -98,9 +95,9 @@ function addToCart(article) {
 
       let produitDansLocalStorage = JSON.parse(localStorage.getItem('produit'));
       console.log(produitDansLocalStorage);
-      
+
       /* Fonction Pop Up*/
-      
+
       const popupConfirmation = () => {
         /* Si le panier contient un artcile*/
         if (
@@ -109,7 +106,6 @@ function addToCart(article) {
         ) {
           window.location.href = 'cart.html';
         } else {
-          
           /* Si le produit commandé n'ai pas dans le panier*/
           window.location.href = 'index.html';
         }
