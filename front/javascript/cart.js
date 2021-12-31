@@ -130,6 +130,7 @@ function modifyQtt() {
 modifyQtt();
 
 function prixCanapQuantité() {
+  let total = 0; // en ligne 133
   let qttModif = document.querySelectorAll('.itemQuantity');
   let productPrice = document.querySelectorAll(
     '.cart__item__content__titlePrice > p '
@@ -168,30 +169,26 @@ function prixCanapQuantité() {
       previousValue + currentValue;
     total = priceCalculation.reduce(reduce);
   }
-  // const total = tab.reduce(
-  //   (total, current) => total + current.prixProduit * current.quantiteProduit,
-  //   0
-  // );
   const totalPrice = document.getElementById('totalPrice');
   totalPrice.textContent = total;
 }
-prixCanapQuantité();
 
+prixCanapQuantité();
 function getTotals() {
   /*Récupération du total des quantités*/
   let elemsQtt = document.getElementsByClassName('itemQuantity');
-  let myLength = elemsQtt.length,
-    totalQtt = 0;
+  let myLength = elemsQtt.length;
+  let totalQtt = 0;
 
-  for (let i = 0; i < myLength; ++i) {
+  for (let i = 0; i < myLength; i++) {
     totalQtt += elemsQtt[i].valueAsNumber;
   }
+  console.log(totalQtt);
   let productTotalQuantity = document.getElementById('totalQuantity');
   productTotalQuantity.innerHTML = totalQtt;
-
   /* Récupération du prix total*/
   totalPrice = 0;
-  for (let i = 0; i < myLength; ++i) {
+  for (let i = 0; i < myLength; i++) {
     totalPrice +=
       elemsQtt[i].valueAsNumber * produitLocalStorage[i].prixProduit;
   }
@@ -199,7 +196,6 @@ function getTotals() {
   let productTotalPrice = document.getElementById('totalPrice');
   productTotalPrice.innerHTML = totalPrice;
 }
-
 getTotals();
 
 /*Suppression d'un Produit*/
@@ -238,7 +234,6 @@ for (let m = 0; m < produitLocalStorage.length; m++) {
   /* Additioner les prix qu'il y'a dans le tableau de la variable "prixTotal"*/
   const reducer = (accumulator, currentValue) => accumulator + currentValue;
   const prixProduit = prixTotal.reduce(reducer, 0);
-  console.log(prixProduit);
 
   let idProducts = [];
   for (let i = 0; i < produitLocalStorage.length; i++) {
