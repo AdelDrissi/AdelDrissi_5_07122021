@@ -82,6 +82,7 @@ function getCart() {
       productQuantity.setAttribute('min', '1');
       productQuantity.setAttribute('max', '100');
       productQuantity.setAttribute('name', 'itemQuantity');
+      productQuantity.setAttribute('onkeypress', 'getTotals()');
 
       /* Insertion de l'élément "div"*/
       let productItemContentSettingsDelete = document.createElement('div');
@@ -125,7 +126,6 @@ function modifyQtt() {
       location.reload();
     });
   }
-  
 }
 modifyQtt();
 
@@ -200,7 +200,6 @@ function getTotals() {
   productTotalPrice.innerHTML = totalPrice;
 }
 
-
 getTotals();
 
 /*Suppression d'un Produit*/
@@ -260,7 +259,3 @@ function getForm() {
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
   );
 }
-
-
-
-
