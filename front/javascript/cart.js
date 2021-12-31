@@ -1,6 +1,6 @@
 /*Initialisation du local storage*/
 let produitLocalStorage = JSON.parse(localStorage.getItem('produit'));
-console.log(produitLocalStorage);
+console.table(produitLocalStorage);
 const positionEmptyCart = document.querySelector('#cart__items');
 
 /* Si le panier est vide*/
@@ -16,7 +16,7 @@ function getCart() {
       productArticle.className = 'cart__item';
       productArticle.setAttribute(
         'data-id',
-        produitLocalStorage[produit].idProduit
+        produitLocalStorage[produit].idProducts
       );
 
       /* Insertion de l'élément "div"*/
@@ -55,7 +55,10 @@ function getCart() {
       /* Insertion du prix*/
       let productPrice = document.createElement('p');
       productItemContentTitlePrice.appendChild(productPrice);
-      productPrice.innerHTML = produitLocalStorage[produit].prixProduit + ' €';
+      productPrice.innerHTML =
+        produitLocalStorage[produit].prixProduit *
+          produitLocalStorage[produit].quantiteProduit +
+        ' €';
 
       /* Insertion de l'élément "div"*/
       let productItemContentSettings = document.createElement('div');
@@ -82,7 +85,16 @@ function getCart() {
       productQuantity.setAttribute('min', '1');
       productQuantity.setAttribute('max', '100');
       productQuantity.setAttribute('name', 'itemQuantity');
-      productQuantity.setAttribute('onkeypress', 'getTotals()');
+      productQuantity.setAttribute(
+        'onchange',
+        'getSubTotals("' +
+          produitLocalStorage[produit].idProduct +
+          '", "' +
+          produitLocalStorage[produit].prixProduit +
+          '", "' +
+          produitLocalStorage[produit].quantiteProduit +
+          '"'
+      );
 
       /* Insertion de l'élément "div"*/
       let productItemContentSettingsDelete = document.createElement('div');
@@ -100,110 +112,63 @@ function getCart() {
 }
 getCart();
 
-/* Modification d'une quantité de produit*/
-
-function modifyQtt() {
-  let qttModif = document.querySelectorAll('.itemQuantity');
-
-  for (let k = 0; k < qttModif.length; k++) {
-    qttModif[k].addEventListener('change', (event) => {
-      event.preventDefault();
-
-      /*Selection de l'element à modifier en fonction de son id ET sa couleur*/
-      let quantityModif = produitLocalStorage[k].quantiteProduit;
-      let qttModifValue = qttModif[k].valueAsNumber;
-
-      const resultFind = produitLocalStorage.find(
-        (element) => element.qttModifValue !== quantityModif
-      );
-
-      resultFind.quantiteProduit = qttModifValue;
-      produitLocalStorage[k].quantiteProduit = resultFind.quantiteProduit;
-
-      localStorage.setItem('produit', JSON.stringify(produitLocalStorage));
-
-      /* refresh rapide*/
-      location.reload();
-    });
-  }
-}
-modifyQtt();
-
 function prixCanapQuantité() {
-  let total = 0; // en ligne 133
+  let total = 0;
   let qttModif = document.querySelectorAll('.itemQuantity');
   let productPrice = document.querySelectorAll(
     '.cart__item__content__titlePrice > p '
   );
 
   const priceCalculation = [];
+
+  for (let k = 0; k < qttModif.length; k++) {
+    qttModif[k].addEventListener('change', (event) => {
+      if ((produitLocalStorage[k] = produitLocalStorage[k])) {
+        const numberProduct =
+          produitLocalStorage[k].prixProduit * qttModif[k].value;
+        productPrice[k].innerHTML = numberProduct + ' € ';
+
+        /*Selection de l'element à modifier en fonction de son id et sa couleur*/
+        let quantityModif = produitLocalStorage[k].quantiteProduit;
+        let qttModifValue = qttModif[k].valueAsNumber;
+        const resultFind = produitLocalStorage.find(
+          (element) => element.idProduct === produitLocalStorage[k].idProduct
+        );
+        resultFind.quantiteProduit = qttModifValue;
+        produitLocalStorage[k].quantiteProduit = resultFind.quantiteProduit;
+      }
+
+      localStorage.setItem('produit', JSON.stringify(produitLocalStorage));
+
+      location.reload(); /* refresh rapide*/
+    });
+  }
+
+  /* le total des articles du panier*/
   for (let index = 0; index < produitLocalStorage.length; index++) {
     const cartAmout =
       produitLocalStorage[index].prixProduit *
       produitLocalStorage[index].quantiteProduit;
-    for (let k = 0; k < qttModif.length; k++) {
-      qttModif[k].addEventListener('change', (event) => {
-        const numberProduct =
-          produitLocalStorage[index].prixProduit * qttModif[k].value;
-        productPrice[k].innerHTML = numberProduct + ' € ';
-        /*Selection de l'element à modifier en fonction de son id et sa couleur*/
-        let quantityModif = produitLocalStorage[k].quantiteProduit;
-        let qttModifValue = qttModif[k].valueAsNumber;
-
-        const resultFind = produitLocalStorage.find(
-          (element) => element.qttModifValue !== quantityModif
-        );
-
-        resultFind.quantiteProduit = qttModifValue;
-        produitLocalStorage[k].quantiteProduit = resultFind.quantiteProduit;
-
-        localStorage.setItem('produit', JSON.stringify(produitLocalStorage));
-
-        /* refresh rapide*/
-        location.reload();
-      });
-    }
-
     priceCalculation.push(cartAmout);
     const reduce = (previousValue, currentValue) =>
       previousValue + currentValue;
     total = priceCalculation.reduce(reduce);
+
+    /* Ajout du getElementById pour faire apparaitre le total des articles dans la page panier*/
+    const totalPrice = document.getElementById('totalPrice');
+    totalPrice.textContent = total;
   }
-  const totalPrice = document.getElementById('totalPrice');
-  totalPrice.textContent = total;
 }
 
 prixCanapQuantité();
-function getTotals() {
-  /*Récupération du total des quantités*/
-  let elemsQtt = document.getElementsByClassName('itemQuantity');
-  let myLength = elemsQtt.length;
-  let totalQtt = 0;
-
-  for (let i = 0; i < myLength; i++) {
-    totalQtt += elemsQtt[i].valueAsNumber;
-  }
-  console.log(totalQtt);
-  let productTotalQuantity = document.getElementById('totalQuantity');
-  productTotalQuantity.innerHTML = totalQtt;
-  /* Récupération du prix total*/
-  totalPrice = 0;
-  for (let i = 0; i < myLength; i++) {
-    totalPrice +=
-      elemsQtt[i].valueAsNumber * produitLocalStorage[i].prixProduit;
-  }
-
-  let productTotalPrice = document.getElementById('totalPrice');
-  productTotalPrice.innerHTML = totalPrice;
-}
-getTotals();
 
 /*Suppression d'un Produit*/
-function deleteProduct() {
-  let btn_supprimer = document.querySelectorAll('.deleteItem');
 
-  for (let j = 0; j < btn_supprimer.length; j++) {
-    btn_supprimer[j].addEventListener('click', (event) => {
+function deleteProduct() {
+  let btn_delete = document.querySelectorAll('.deleteItem');
+
+  for (let j = 0; j < btn_delete.length; j++) {
+    btn_delete[j].addEventListener('click', (event) => {
       event.preventDefault();
 
       /*Selection de l'element à supprimer en fonction de son id et sa couleur*/
@@ -226,24 +191,13 @@ function deleteProduct() {
 }
 deleteProduct();
 
-let prixTotal = [];
+/*Instauration formulaire avec Regex*/
 
-for (let m = 0; m < produitLocalStorage.length; m++) {
-  let prixProduitPanier = produitLocalStorage[m].prixProduit;
-
-  /* Additioner les prix qu'il y'a dans le tableau de la variable "prixTotal"*/
-  const reducer = (accumulator, currentValue) => accumulator + currentValue;
-  const prixProduit = prixTotal.reduce(reducer, 0);
-
-  let idProducts = [];
-  for (let i = 0; i < produitLocalStorage.length; i++) {
-    idProducts.push(produitLocalStorage[i].idProduit);
-  }
-}
-
-/*Instauration formulaire avec regex*/
 function getForm() {
+
+
   /* Ajout des Regex*/
+
   let form = document.querySelector('.cart__order__form');
 
   let emailRegExp = new RegExp(
