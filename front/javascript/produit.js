@@ -110,7 +110,7 @@ function addToCart(article) {
           window.location.href = 'index.html';
         }
       };
-      /* Fonction produit ajouter dans le LocalStorage*/
+      /* Produit ajouter dans le LocalStorage*/
       const ajoutProduitLocalStorage = () => {
         /* Ajout dans le tableau de l'objet avec les valeurs de l'utilisateurs*/
         produitDansLocalStorage.push(produitOptions);
