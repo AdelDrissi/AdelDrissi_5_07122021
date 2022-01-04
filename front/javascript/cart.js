@@ -202,7 +202,7 @@ function getForm() {
   let addressRegExp = RegExp(
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
   );
-  console.log(form.city.value);
+
 
   /* Ecoute de la modification du prénom*/
   form.firstName.addEventListener('change', function () {
@@ -341,6 +341,9 @@ sendOrder.addEventListener('click', function (event) {
     headers: {
       'Content-Type': 'application/json',
     },
-  });
-  window.location = `confirmation.html`;
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      window.location = `confirmation.html?orderId=${data.orderId}`;
+    });
 });
