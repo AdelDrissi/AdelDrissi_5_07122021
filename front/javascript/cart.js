@@ -1,6 +1,5 @@
 /*Initialisation du local storage*/
 let produitLocalStorage = JSON.parse(localStorage.getItem('produit'));
-console.table(produitLocalStorage);
 const positionEmptyCart = document.querySelector('#cart__items');
 
 /* Si le panier est vide*/
@@ -192,21 +191,18 @@ function deleteProduct() {
 deleteProduct();
 
 /*Instauration formulaire avec Regex*/
-
 let form = document.querySelector('.cart__order__form');
-
-console.log(form);
-
 function getForm() {
   /* Ajout des Regex*/
 
-  let emailRegExp = new RegExp(
+  let emailRegExp = RegExp(
     '^[a-z]([.-]{0,1}[a-z0-9]+)@[a-z0-9]([.-]{0,1}[a-z0-9]+).[a-z0-9]{2,4}$'
   );
-  let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-  let addressRegExp = new RegExp(
+  let charRegExp = RegExp("^[a-zA-Z ,.'-]+$");
+  let addressRegExp = RegExp(
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
   );
+  console.log(form.city.value);
 
   /* Ecoute de la modification du prénom*/
   form.firstName.addEventListener('change', function () {
@@ -234,13 +230,17 @@ function getForm() {
   });
 
   /*validation du prénom*/
-  let validFirstName = function (inputFirstName) {
+  const validFirstName = function (inputFirstName) {
     let firstNameErrorMsg = inputFirstName.nextElementSibling;
 
+    /* Si l'email est valide il retournera vrai */
     if (charRegExp.test(inputFirstName.value)) {
       firstNameErrorMsg.innerHTML = '';
+
+      /* Si le nom est faux il retournera un message d'erreur */
     } else {
-      firstNameErrorMsg.innerHTML = 'Veuillez renseigner le champ ici.';
+      firstNameErrorMsg.innerHTML =
+        'Ne peut contenir que des lettres avec 3 caractères minimum ';
     }
   };
 
@@ -248,10 +248,14 @@ function getForm() {
   const validLastName = function (inputLastName) {
     let lastNameErrorMsg = inputLastName.nextElementSibling;
 
+    /* Si l'email est valide il retournera vrai */
     if (charRegExp.test(inputLastName.value)) {
       lastNameErrorMsg.innerHTML = '';
+
+      /* Si le nom est faux il retournera un message d'erreur */
     } else {
-      lastNameErrorMsg.innerHTML = 'Veuillez renseigner le champ ici.';
+      lastNameErrorMsg.innerHTML =
+        'Ne peut contenir que des lettres avec 3 caractères minimum';
     }
   };
 
@@ -259,10 +263,14 @@ function getForm() {
   const validAddress = function (inputAddress) {
     let addressErrorMsg = inputAddress.nextElementSibling;
 
+    /* Si l'adresse est valide il retournera vrai */
     if (addressRegExp.test(inputAddress.value)) {
       addressErrorMsg.innerHTML = '';
+
+      /* Si l'adresse est faux il retournera un message d'erreur */
     } else {
-      addressErrorMsg.innerHTML = 'Veuillez renseigner ce champ ici.';
+      addressErrorMsg.innerHTML =
+        'Contient des caractères non valides au format adresse';
     }
   };
 
@@ -270,22 +278,69 @@ function getForm() {
   const validCity = function (inputCity) {
     let cityErrorMsg = inputCity.nextElementSibling;
 
+    /* Si l'email est valide il retournera vrai */
     if (charRegExp.test(inputCity.value)) {
       cityErrorMsg.innerHTML = '';
+
+      /* Si l'email est faux il retournera un message d'erreur */
     } else {
-      cityErrorMsg.innerHTML = 'Veuillez renseigner ce champ ici .';
+      cityErrorMsg.innerHTML =
+        'Ne peut contenir que des lettres avec 3 caractères minimum';
     }
   };
 
   /*validation de l'email*/
   const validEmail = function (inputEmail) {
     let emailErrorMsg = inputEmail.nextElementSibling;
-
+    /* Si l'email est valide il retournera vrai */
     if (emailRegExp.test(inputEmail.value)) {
       emailErrorMsg.innerHTML = '';
     } else {
-      emailErrorMsg.innerHTML = 'Veuillez renseigner votre email.';
+      /* Si le nom est faux il retournera un message d'erreur */
+      emailErrorMsg.innerHTML =
+        'Email non valide , indiquer une adresse (javascript@javascript.)';
     }
   };
-  getForm();
 }
+getForm();
+
+const contactProductsArray = {
+  contact: {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    address: address.value,
+    city: city.value,
+    email: email.value,
+  },
+};
+
+function createBody() {
+  const contact = {
+    firstName: document.getElementById('firstName').value,
+    lastName: document.getElementById('lastName').value,
+    address: document.getElementById('address').value,
+    city: document.getElementById('city').value,
+    email: document.getElementById('email').value,
+  };
+
+  const products = [];
+  for (let index = 0; index < produitLocalStorage.length; index++) {
+    products.push(produitLocalStorage[index].idProduct);
+  }
+  return JSON.stringify({ contact, products });
+}
+
+let sendOrder = document.getElementById('order');
+sendOrder.addEventListener('click', function (event) {
+  event.preventDefault();
+  const bodyValue = createBody();
+
+  fetch('http://localhost:3000/api/products/order', {
+    method: 'POST',
+    body: createBody(),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  window.location = `confirmation.html`;
+});
