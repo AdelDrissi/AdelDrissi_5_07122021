@@ -203,7 +203,6 @@ function getForm() {
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
   );
 
-
   /* Ecoute de la modification du prénom*/
   form.firstName.addEventListener('change', function () {
     validFirstName(this);
