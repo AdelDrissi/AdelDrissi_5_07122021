@@ -6,7 +6,6 @@ let article = '';
 
 const colorPicked = document.querySelector('#colors');
 const quantityPicked = document.querySelector('#quantity');
-
 getArticle();
 
 /*Récuperation des articles de l'API*/
@@ -66,7 +65,7 @@ function addToCart(article) {
   const btn_envoyerPanier = document.querySelector('#addToCart');
   let select = document.querySelector('select');
 
-  /* QUANTITE ENTRE 1 ET 100 ET COULEUR */
+  // QUANTITE ENTRE 1 ET 100 ET COULEUR //
 
   btn_envoyerPanier.addEventListener('click', (event) => {
     if (quantityPicked.value > 0 && select.value) {
@@ -94,7 +93,6 @@ function addToCart(article) {
       /*Initialisation du local storage*/
 
       let produitDansLocalStorage = JSON.parse(localStorage.getItem('produit'));
-      console.log(produitDansLocalStorage);
 
       /* Fonction Pop Up*/
 
@@ -112,9 +110,33 @@ function addToCart(article) {
       };
       /* Produit ajouter dans le LocalStorage*/
       const ajoutProduitLocalStorage = () => {
-        /* Ajout dans le tableau de l'objet avec les valeurs de l'utilisateurs*/
-        produitDansLocalStorage.push(produitOptions);
-        /* Transformation en format JSON envoyer dans la "key" produit du LocalStorage*/
+        let articlePresent = false;
+
+        // On boucle les produits en panier
+        for (let i = 0; i < produitDansLocalStorage.length; i++) {
+          // SI LE PRODUIT EST TROUVE DANS LE LS
+          if (
+            produitDansLocalStorage[i].idProduct == produitOptions.idProduct &&
+            produitDansLocalStorage[i].couleurProduit ==
+              produitOptions.couleurProduit
+          ) {
+            articlePresent = true;
+
+            let quantiteActuelle = parseInt(
+              produitDansLocalStorage[i].quantiteProduit
+            );
+
+            let newQuantite = parseInt(quantityPicked.value);
+            produitDansLocalStorage[i].quantiteProduit =
+              newQuantite + quantiteActuelle;
+          }
+        }
+
+        // Si création d'une ref
+        if (articlePresent == false) {
+          produitDansLocalStorage.push(produitOptions);
+        }
+
         localStorage.setItem(
           'produit',
           JSON.stringify(produitDansLocalStorage)

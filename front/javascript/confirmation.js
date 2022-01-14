@@ -6,5 +6,4 @@ function getOrderId() {
   const orderId = document.querySelector('#orderId');
   orderId.innerHTML = orderIdValue;
 }
-
 getOrderId();
