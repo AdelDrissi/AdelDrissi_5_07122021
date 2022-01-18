@@ -216,6 +216,7 @@ btnOrder.addEventListener('click', (event) => {
       'Email non valide , indiquer une adresse (javascript@javascript.)';
   } else {
     checkedItems += 0;
+    document.getElementById('emailErrorMsg').innerHTML = '';
   }
 
   // VERIFICATION LAST NAME //
@@ -226,6 +227,7 @@ btnOrder.addEventListener('click', (event) => {
       'Ne peut contenir que des lettres avec 3 caractères minimum';
   } else {
     checkedItems += 0;
+    document.getElementById('lastNameErrorMsg').innerHTML = '';
   }
 
   // VERIFICATION CITY //
@@ -235,6 +237,7 @@ btnOrder.addEventListener('click', (event) => {
       'Ne peut contenir que des lettres avec 3 caractères minimum';
   } else {
     checkedItems += 0;
+    document.getElementById('cityErrorMsg').innerHTML = '';
   }
   // VERIFICATION FIRST NAME //
   if (!charRegExp.test(firstNameValue)) {
@@ -243,6 +246,7 @@ btnOrder.addEventListener('click', (event) => {
       'Ne peut contenir que des lettres avec 3 caractères minimum';
   } else {
     checkedItems += 0;
+    document.getElementById('firstNameErrorMsg').innerHTML = '';
   }
   let addressRegExp = RegExp(
     '^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+'
@@ -255,6 +259,7 @@ btnOrder.addEventListener('click', (event) => {
       'Contient des caractères non valides au format adresse';
   } else {
     checkedItems += 0;
+    document.getElementById('addressErrorMsg').innerHTML = '';
   }
   //SI ILS SONT OK ALORS ON SOUMET//
   if (checkedItems === 0) {
