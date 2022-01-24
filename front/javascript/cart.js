@@ -3,9 +3,11 @@ let produitLocalStorage = JSON.parse(localStorage.getItem('produit'));
 const positionEmptyCart = document.querySelector('#cart__items');
 
 /* Si le panier est vide*/
-function getCart() {
+function localStorageProductsDOM() {
   if (produitLocalStorage === null || produitLocalStorage == 0) {
     const emptyCart = `<p>Votre panier est vide</p>`;
+    alert(`retour a la page d'accueil`);
+    location.href = 'index.html';
     positionEmptyCart.innerHTML = emptyCart;
   } else {
     for (let produit in produitLocalStorage) {
@@ -109,7 +111,7 @@ function getCart() {
     }
   }
 }
-getCart();
+localStorageProductsDOM();
 
 function prixCanapQuantité() {
   let total = 0;

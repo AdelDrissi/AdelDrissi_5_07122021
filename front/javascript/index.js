@@ -1,4 +1,4 @@
-const fetchKanap = async () => {
+const apiCall = async () => {
   await fetch('http://localhost:3000/api/products')
     .then((res) => res.json())
     .then((products) => {
@@ -7,7 +7,7 @@ const fetchKanap = async () => {
     });
 };
 
-fetchKanap();
+apiCall();
 
 function displayProducts(products) {
   let CanapeHtml = '';

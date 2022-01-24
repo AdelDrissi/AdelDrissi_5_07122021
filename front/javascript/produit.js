@@ -1,7 +1,6 @@
 var str = window.location.href;
 var url = new URL(str);
 var productId = url.searchParams.get('id');
-console.log(productId);
 let article = '';
 
 const colorPicked = document.querySelector('#colors');
@@ -25,6 +24,8 @@ function getArticle() {
       }
     });
 }
+
+console.log(productId);
 function getPost(article) {
   /* Insertion de l'image*/
 
@@ -107,6 +108,8 @@ function addToCart(article) {
           /* Si le produit commandé n'ai pas dans le panier*/
           window.location.href = 'index.html';
         }
+
+        console.log('localStorage update', produitLocalStorage);
       };
       /* Produit ajouter dans le LocalStorage*/
       const ajoutProduitLocalStorage = () => {
